@@ -165,3 +165,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Lấy các phần tử
+  const zaloBtn = document.querySelector(".zalo-btn");
+  const zaloQrPopup = document.getElementById("zaloQrPopup");
+  const qrClose = document.querySelector(".qr-close");
+
+  // Hiển thị popup khi click vào nút Zalo
+  zaloBtn.addEventListener("click", function (e) {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định (chuyển hướng)
+    zaloQrPopup.style.display = "block";
+  });
+
+  // Đóng popup khi click vào nút close
+  qrClose.addEventListener("click", function () {
+    zaloQrPopup.style.display = "none";
+  });
+
+  // Đóng popup khi click bên ngoài
+  window.addEventListener("click", function (e) {
+    if (e.target == zaloQrPopup) {
+      zaloQrPopup.style.display = "none";
+    }
+  });
+});

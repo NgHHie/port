@@ -100,6 +100,52 @@ header.hero .btn {
   margin: 3em 0;
 }
 
+/* Floating Social Buttons */
+.floating-social {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.floating-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: white;
+  font-size: 30px;
+}
+
+.floating-btn:hover {
+  transform: scale(1.1);
+  color: white;
+}
+
+.messenger-btn {
+  background-color: #0084ff;
+}
+
+.zalo-btn {
+  background-color: #0068ff;
+}
+
+.zalo-img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+}
+
+/* Removed .zalo-text class as we're using the image instead */
+
 /* Navbar */
 .navbar {
   transition: background-color 0.3s ease;
@@ -490,6 +536,18 @@ ul.social-links li a img {
   .sub-footer p {
     font-size: 1em;
   }
+
+  /* Responsive floating buttons */
+  .floating-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .zalo-img {
+    width: 45px;
+    height: 45px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -508,6 +566,24 @@ ul.social-links li a img {
   .property-name {
     font-size: 1.2rem;
   }
+
+  /* Smaller floating buttons for mobile */
+  .floating-social {
+    right: 15px;
+    bottom: 70px;
+  }
+
+  .floating-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .zalo-img {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -515,5 +591,17 @@ ul.social-links li a img {
     height: auto;
     min-height: 100vh;
     padding-top: 70px;
+  }
+
+  /* Even smaller floating buttons for small screens */
+  .floating-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .zalo-img {
+    width: 35px;
+    height: 35px;
   }
 }

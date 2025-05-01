@@ -115,7 +115,7 @@ function loadPropertyData() {
                   <div class="property-price">${price}</div>
                   <span class="property-type">Đang mở bán</span>
                   <div class="mt-3">
-                    <a href="#contact" class="btn btn-sm btn-outline-primary">Liên hệ ngay</a>
+                    <a href="#contact" class="btn btn-sm btn-outline-primary">Liên hệ ngay: 0946 314286</a>
                   </div>
                 </div>
               </div>

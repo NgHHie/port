@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hiển thị bảng từ Google Sheet</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dữ liệu từ Google Sheet</h2>
+    <table id="sheetTable"></table>
+
+    <script>
+      const sheetURL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi1ZyjR__6YDErmrUqGdgxd15hKKG4V5KKR0gWPFPXCibGC7TYeQwqM4gZkO9aeC50T-dTG-_bepBy/pubhtml?gid=354537414&single=true";
+
+      fetch(sheetURL)
+        .then((response) => response.text())
+        .then((html) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const rows = doc.querySelectorAll("table tbody tr");
+          console.log(rows);
+
+          const table = document.getElementById("sheetTable");
+
+          // Tạo phần đầu bảng (nếu có tiêu đề)
+          const headerRow = rows[0];
+          const headerCells = headerRow.querySelectorAll("td");
+          const thead = document.createElement("thead");
+          const headRow = document.createElement("tr");
+          headerCells.forEach((cell) => {
+            const th = document.createElement("th");
+            th.textContent = cell.textContent;
+            headRow.appendChild(th);
+          });
+          thead.appendChild(headRow);
+          table.appendChild(thead);
+
+          // Tạo phần thân bảng
+          const tbody = document.createElement("tbody");
+          rows.forEach((row, index) => {
+            if (index == 0) return;
+            const tr = document.createElement("tr");
+            const cells = row.querySelectorAll("td");
+            cells.forEach((cell) => {
+              const td = document.createElement("td");
+              td.textContent = cell.textContent;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+        })
+        .catch((err) => {
+          console.error("Lỗi tải dữ liệu từ Google Sheet:", err);
+          document.body.innerHTML =
+            "<p style='color:red;'>Lỗi tải dữ liệu từ Google Sheet!</p>";
+        });
+    </script>
+  </body>
+</html>

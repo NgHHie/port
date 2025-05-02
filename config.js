@@ -9,7 +9,7 @@ const config = {
 
   // Contact information
   contactPhone: "0946314286",
-  contactEmail: "info@elitereal.vn",
+  contactEmail: "Lamgiang.kahp@gmail.com",
 
   // Social media
   facebookUrl: "https://www.facebook.com/hoa.thao.1257",

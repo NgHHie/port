@@ -2,7 +2,7 @@
 const config = {
   // Base API URL - change this to your server URL when deploying
   // For local development, leave it as a relative URL
-  apiBaseUrl: "port-back-7tuh.vercel.app",
+  apiBaseUrl: "https://port-back-7tuh.vercel.app",
 
   // For production, you might want to set an absolute URL
   // apiBaseUrl: 'https://yourdomain.com',

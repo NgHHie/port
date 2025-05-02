@@ -1,0 +1,17 @@
+// Configuration file for the website
+const config = {
+  // Base API URL - change this to your server URL when deploying
+  // For local development, leave it as a relative URL
+  apiBaseUrl: "http://localhost:3000",
+
+  // For production, you might want to set an absolute URL
+  // apiBaseUrl: 'https://yourdomain.com',
+
+  // Contact information
+  contactPhone: "0946314286",
+  contactEmail: "info@elitereal.vn",
+
+  // Social media
+  facebookUrl: "https://www.facebook.com/hoa.thao.1257",
+  zaloPhone: "0946314286",
+};

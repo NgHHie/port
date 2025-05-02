@@ -68,78 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Load property data from Google Sheet
+  // Load property data from the API
   loadPropertyData();
-});
 
-// Function to load property data from Google Sheet
-function loadPropertyData() {
-  // URL của Google Sheet được xuất bản dưới dạng HTML
-  const sheetURL =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi1ZyjR__6YDErmrUqGdgxd15hKKG4V5KKR0gWPFPXCibGC7TYeQwqM4gZkO9aeC50T-dTG-_bepBy/pubhtml?gid=354537414&single=true";
-
-  fetch(sheetURL)
-    .then((response) => response.text())
-    .then((html) => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const rows = doc.querySelectorAll("table tbody tr");
-
-      const propertyList = document.getElementById("propertyList");
-      propertyList.innerHTML = ""; // Clear loading spinner
-
-      // Skip header (first row)
-      for (let i = 1; i < rows.length; i++) {
-        const cells = rows[i].querySelectorAll("td");
-
-        // Check if we have enough cells with data
-        if (cells.length >= 4 && cells[0].textContent.trim() !== "") {
-          const name = cells[0].textContent.trim();
-          const address = cells[1].textContent.trim();
-          const price = cells[2].textContent.trim();
-          const imageUrl = cells[3].textContent.trim();
-
-          // Create property card
-          const propertyCard = document.createElement("div");
-          propertyCard.className = "col-lg-4 col-md-6 mb-4";
-
-          // Use placeholder if image URL is empty
-          const imgSrc = imageUrl || "images/property-placeholder.jpg";
-
-          propertyCard.innerHTML = `
-              <div class="property-card">
-                <img src="${imgSrc}" alt="${name}" class="property-img">
-                <div class="property-info">
-                  <h3 class="property-name">${name}</h3>
-                  <p class="property-address">${address}</p>
-                  <div class="property-price">${price}</div>
-                  <span class="property-type">Đang mở bán</span>
-                  <div class="mt-3">
-                    <a class="btn btn-sm btn-outline-primary">Liên hệ ngay: 0946 314286</a>
-                  </div>
-                </div>
-              </div>
-            `;
-
-          propertyList.appendChild(propertyCard);
-        }
-      }
-
-      // If no properties were loaded
-      if (propertyList.children.length === 0) {
-        propertyList.innerHTML =
-          '<div class="col-12 text-center"><p>Không có dự án nào được tìm thấy.</p></div>';
-      }
-    })
-    .catch((err) => {
-      console.error("Lỗi tải dữ liệu từ Google Sheet:", err);
-      document.getElementById("propertyList").innerHTML =
-        '<div class="col-12 text-center"><p class="text-danger">Lỗi tải dữ liệu từ Google Sheet!</p></div>';
-    });
-}
-
-// Handle form submissions
-document.addEventListener("DOMContentLoaded", function () {
   // Newsletter form
   const newsletterForm = document.querySelector(".newsletter-form form");
   if (newsletterForm) {
@@ -147,26 +78,120 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       const emailInput = this.querySelector('input[type="email"]');
       if (emailInput.value) {
-        alert("Cảm ơn bạn đã đăng ký nhận thông báo!");
-        emailInput.value = "";
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ...';
+
+        // Send subscription to API
+        fetch(config.apiBaseUrl + "/api/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: emailInput.value }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+
+            // Hiển thị cả alert và toast notification
+            alert(data.message || "Cảm ơn bạn đã đăng ký nhận thông báo!");
+            showSuccessToast(
+              data.message || "Cảm ơn bạn đã đăng ký nhận thông báo!"
+            );
+            emailInput.value = "";
+          })
+          .catch((error) => {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+
+            // Hiển thị cả alert và toast notification
+            alert(
+              data.message || "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau!"
+            );
+            showErrorToast(
+              data.message || "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau!"
+            );
+          });
       }
     });
   }
 
   // Contact form
-  const contactForm = document.querySelector(".contact-form form");
+  const contactForm = document.getElementById("contactForm");
   if (contactForm) {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      alert(
-        "Cảm ơn bạn đã gửi tin nhắn. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất!"
-      );
-      this.reset();
+
+      const name = this.querySelector('input[name="name"]').value;
+      const email = this.querySelector('input[name="email"]').value;
+      const phone = this.querySelector('input[name="phone"]').value;
+      const message = this.querySelector('textarea[name="message"]').value;
+
+      const contactData = {
+        name,
+        email,
+        phone,
+        message,
+      };
+
+      if (!email) {
+        alert("Vui lòng nhập email của bạn!");
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML =
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...';
+
+      // Send contact info to API
+      fetch(config.apiBaseUrl + "/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contactData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+
+          // Hiển thị cả alert và toast notification
+          alert(
+            data.message ||
+              "Cảm ơn bạn đã gửi tin nhắn. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất!"
+          );
+          showSuccessToast(
+            data.message ||
+              "Cảm ơn bạn đã gửi tin nhắn. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất!"
+          );
+          this.reset();
+        })
+        .catch((error) => {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+
+          // Hiển thị cả alert và toast notification
+          alert("Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại sau!");
+          showErrorToast(
+            "Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại sau!"
+          );
+        });
     });
   }
-});
 
-document.addEventListener("DOMContentLoaded", function () {
   // Lấy các phần tử
   const zaloBtn = document.querySelector(".zalo-btn");
   const zaloQrPopup = document.getElementById("zaloQrPopup");
@@ -189,4 +214,100 @@ document.addEventListener("DOMContentLoaded", function () {
       zaloQrPopup.style.display = "none";
     }
   });
+
+  // Update contact information and links from config
+  document.getElementById("contactPhone").textContent = config.contactPhone;
+  document.getElementById("contactEmail").textContent = config.contactEmail;
+  document.getElementById("zaloPhone").textContent = config.zaloPhone;
+
+  // Update Facebook links
+  const facebookLinks = document.querySelectorAll("a[href*='facebook.com']");
+  facebookLinks.forEach((link) => {
+    link.href = config.facebookUrl;
+  });
 });
+
+// Function to load property data from API
+function loadPropertyData() {
+  const apiURL = config.apiBaseUrl + "/api/properties";
+
+  // Show loading spinner
+  const propertyList = document.getElementById("propertyList");
+  propertyList.innerHTML = `
+    <div class="col-12 text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Đang tải...</span>
+      </div>
+    </div>
+  `;
+
+  fetch(apiURL)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((properties) => {
+      propertyList.innerHTML = ""; // Clear loading spinner
+
+      if (properties && properties.length > 0) {
+        properties.forEach((property) => {
+          const propertyCard = document.createElement("div");
+          propertyCard.className = "col-lg-4 col-md-6 mb-4";
+
+          // Use placeholder if image URL is empty
+          const imgSrc =
+            property.image_url || "images/property-placeholder.jpg";
+
+          propertyCard.innerHTML = `
+            <div class="property-card">
+              <img src="${imgSrc}" alt="${property.name}" class="property-img">
+              <div class="property-info">
+                <h3 class="property-name">${property.name}</h3>
+                <p class="property-address">${property.address}</p>
+                <div class="property-price">${property.price}</div>
+                <span class="property-type">Đang mở bán</span>
+                <div class="mt-3">
+                  <a href="tel:${config.contactPhone}" class="btn btn-sm btn-outline-primary">Liên hệ ngay: ${config.contactPhone}</a>
+                </div>
+              </div>
+            </div>
+          `;
+
+          propertyList.appendChild(propertyCard);
+        });
+
+        // Show success toast only if not the initial page load
+        if (window.hasLoadedPropertiesBefore) {
+          showSuccessToast("Đã tải danh sách dự án thành công!");
+        }
+        window.hasLoadedPropertiesBefore = true;
+      } else {
+        propertyList.innerHTML = `
+          <div class="col-12">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-home"></i>
+              </div>
+              <div class="empty-state-text">Hiện chưa có dự án nào được đăng tải</div>
+              <p class="text-muted">Vui lòng quay lại sau để xem các dự án mới nhất</p>
+            </div>
+          </div>`;
+      }
+    })
+    .catch((error) => {
+      console.error("Lỗi khi tải dữ liệu từ API:", error);
+      propertyList.innerHTML = `
+        <div class="col-12">
+          <div class="api-error">
+            <h5><i class="fas fa-exclamation-circle"></i> Không thể tải dữ liệu</h5>
+            <p>Đã xảy ra lỗi khi tải danh sách dự án. Vui lòng tải lại trang hoặc thử lại sau.</p>
+            <button class="btn btn-sm btn-outline-danger" onclick="loadPropertyData()">Thử lại</button>
+          </div>
+        </div>`;
+
+      // Show error toast
+      showErrorToast("Không thể tải danh sách dự án. Vui lòng thử lại sau!");
+    });
+}

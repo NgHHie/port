@@ -1,0 +1,123 @@
+/* API-related styles */
+
+/* Toast notification */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 350px;
+}
+
+.toast {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.toast-header {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+
+.toast-body {
+  padding: 15px;
+}
+
+.toast-success {
+  border-left: 5px solid #28a745;
+}
+
+.toast-error {
+  border-left: 5px solid #dc3545;
+}
+
+.toast-info {
+  border-left: 5px solid #0053a6;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast.hiding {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+/* Loading button states */
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-loading .spinner-border {
+  margin-right: 8px;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* API Error message styling */
+.api-error {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 20px 0;
+  color: #dc3545;
+}
+
+.api-error h5 {
+  margin-top: 0;
+  color: #dc3545;
+}
+
+/* Empty state for property list */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.empty-state-icon {
+  font-size: 60px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.empty-state-text {
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 20px;
+}

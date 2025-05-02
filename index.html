@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portfolio Bất Động Sản</title>
+    <title>Hòa Nguyễn BĐS</title>
 
     <!-- Bootstrap -->
     <link
@@ -26,6 +26,7 @@
 
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet" />
+    <link href="api-styles.css" rel="stylesheet" />
   </head>
 
   <body>
@@ -184,6 +185,7 @@
                   type="email"
                   class="newsletter-input"
                   placeholder="Email của bạn"
+                  required
                 />
                 <button type="submit" class="newsletter-btn">Đăng ký</button>
                 <div class="clearfix"></div>
@@ -216,8 +218,14 @@
 
               <div class="mb-4">
                 <h5 class="mb-3"><strong>Thông tin liên hệ</strong></h5>
-                <p><strong>Email:</strong> info@elitereal.vn</p>
-                <p><strong>Sdt:</strong> 0946 314286</p>
+                <p>
+                  <strong>Email:</strong>
+                  <span id="contactEmail">info@elitereal.vn</span>
+                </p>
+                <p>
+                  <strong>Sdt:</strong>
+                  <span id="contactPhone">0946314286</span>
+                </p>
               </div>
 
               <div class="mb-4">
@@ -226,6 +234,7 @@
                   <li>
                     <a
                       class="a-big"
+                      id="facebookLink"
                       href="https://www.facebook.com/hoa.thao.1257"
                       target="_blank"
                       >Facebook Hòa Nguyễn</a
@@ -239,12 +248,13 @@
           <div class="col-md-6">
             <div class="contact-form bg-white p-4 shadow-sm rounded">
               <h4 class="mb-4 text-center">Gửi tin nhắn cho tôi</h4>
-              <form>
+              <form id="contactForm">
                 <div class="mb-3">
                   <input
                     type="text"
                     class="form-control"
                     placeholder="Họ và tên"
+                    name="name"
                   />
                 </div>
                 <div class="mb-3">
@@ -252,6 +262,8 @@
                     type="email"
                     class="form-control"
                     placeholder="Email"
+                    required
+                    name="email"
                   />
                 </div>
                 <div class="mb-3">
@@ -259,6 +271,7 @@
                     type="tel"
                     class="form-control"
                     placeholder="Số điện thoại"
+                    name="phone"
                   />
                 </div>
                 <div class="mb-3">
@@ -266,6 +279,7 @@
                     class="form-control"
                     rows="4"
                     placeholder="Lời nhắn của bạn"
+                    name="message"
                   ></textarea>
                 </div>
                 <div class="text-center">
@@ -316,13 +330,15 @@
         </div>
         <p>Sử dụng app Zalo quét mã QR này</p>
         <p class="qr-phone">
-          Hoặc kết nối qua số: <strong>0946 314286</strong>
+          Hoặc kết nối qua số: <strong id="zaloPhone">0946314286</strong>
         </p>
       </div>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script src="toast-utils.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
